@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111d" />
+    <title>Pulsefield — Morse Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="aurora"></div><div class="grid"></div>
+    <main>
+      <nav class="topbar"><a class="brand" href="#"><i></i>PULSEFIELD</a><span class="status"><b></b>SIGNAL READY</span></nav>
+      <section class="intro"><p class="eyebrow">MORSE / FIELD STUDIO</p><h1>Messages, reduced<br>to <em>light &amp; pulse.</em></h1><p class="lede">A modern workbench for translating language into the world’s original digital signal.</p></section>
+      <section class="studio" aria-label="Morse code studio">
+        <div class="tabs" role="tablist"><button class="tab active" data-mode="encode">01&nbsp; ENCODE</button><button class="tab" data-mode="decode">02&nbsp; DECODE</button><button class="reference-toggle" id="referenceToggle">CODEBOOK <span>↗</span></button></div>
+        <div class="panel encode-panel" id="encodePanel">
+          <div class="input-zone"><label for="message">YOUR TRANSMISSION <span id="count">0 / 240</span></label><textarea id="message" maxlength="240" placeholder="Write something worth sending…" spellcheck="false"></textarea><div class="input-foot"><button class="text-button" id="example">USE A FIELD EXAMPLE</button><button class="primary" id="transmit">TRANSMIT <span>→</span></button></div></div>
+          <div class="output-zone"><div class="output-header"><span>LIVE SIGNAL</span><button class="icon-button" id="copyMorse" aria-label="Copy morse code">⧉</button></div><div id="morseOutput" class="morse-output" aria-live="polite">— — —</div><div class="separator"></div><div class="playback"><div><span>PLAYBACK RATE</span><strong id="speedValue">5 WPM</strong></div><input type="range" id="speed" min="1" max="10" value="5" /><button class="round-button" id="stop" aria-label="Stop playback">■</button></div></div>
+        </div>
+        <div class="panel decode-panel hidden" id="decodePanel">
+          <div class="key-zone"><div class="decode-copy"><span>INPUT CONSOLE</span><h2>Tap the key.<br>Hold for a dash.</h2><p>Short press = dot · long press = dash. Pause to commit a letter.</p></div><button id="telegraphKey" class="telegraph-key" aria-label="Morse telegraph key"><span class="knob"></span><span class="lever"></span><span class="base"></span></button><div class="signal-meter"><span>PRESS DURATION</span><div><i id="durationFill"></i></div><small>DOT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DASH</small></div></div>
+          <div class="decode-result"><div><span>CURRENT</span><strong id="currentCode">·</strong></div><div><span>RECEIVED</span><p id="decodedText">Waiting for signal</p></div><button class="text-button" id="clearDecode">CLEAR</button></div>
+        </div>
+        <div class="pulse-deck"><div class="bulb-wrap"><div class="bulb" id="bulb"><div class="filament"></div></div><span>OPTICAL RELAY</span></div><div class="wave"><span>TRANSMISSION TRACE</span><div id="waveform" class="waveform"></div></div><div class="legend"><span><i class="dot-dot"></i>DIT</span><span><i class="dash-dot"></i>DAH</span><span><i class="gap-dot"></i>GAP</span></div></div>
+      </section>
+      <section class="reference hidden" id="reference"><div><p class="eyebrow">QUICK CODEBOOK</p><h2>International Morse.</h2></div><div id="codeGrid" class="code-grid"></div></section>
+      <footer><span>DESIGNED FOR CLEAR SIGNALS</span><span>SPACEBAR ENABLED · AUDIO SYNTHESIS ON</span></footer>
+    </main>
+    <div class="toast" id="toast"></div><script src="script.js"></script>
+  </body>
+</html>
