@@ -26,6 +26,8 @@ Then open `http://localhost:8080`.
 - `index.html` — application structure
 - `style.css` — responsive visual system and micro-interactions
 - `script.js` — Morse engine, audio synthesizer, telegraph key and UI controls
+- `src/compiler/lexer.js` — position-aware lexer (see `docs/LEXICAL_ANALYSIS.md`)
+- `tests/` — Node test suite, run with `npm test`
 
 ## Interaction notes
 
