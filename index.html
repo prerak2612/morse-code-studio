@@ -20,6 +20,7 @@
         <div class="panel encode-panel" id="encodePanel">
           <div class="input-zone"><label for="message">YOUR TRANSMISSION <span id="count">0 / 240</span></label><textarea id="message" maxlength="240" placeholder="Write something worth sending…" spellcheck="false"></textarea><div class="input-foot"><button class="text-button" id="example">USE A FIELD EXAMPLE</button><button class="primary" id="transmit">TRANSMIT <span>→</span></button></div></div>
           <div class="output-zone"><div class="output-header"><span>LIVE SIGNAL</span><button class="icon-button" id="copyMorse" aria-label="Copy morse code">⧉</button></div><div id="morseOutput" class="morse-output" aria-live="polite">— — —</div><div class="separator"></div><div class="playback"><div><span>PLAYBACK RATE</span><strong id="speedValue">5 WPM</strong></div><input type="range" id="speed" min="1" max="10" value="5" /><button class="round-button" id="stop" aria-label="Stop playback">■</button></div></div>
+          <div class="token-zone"><div class="output-header"><span>TOKEN STREAM</span><span id="tokenSummary">1 TOKEN</span></div><ol id="tokenStream" class="token-stream" aria-live="polite" aria-label="Lexer token stream"></ol></div>
         </div>
         <div class="panel decode-panel hidden" id="decodePanel">
           <div class="key-zone"><div class="decode-copy"><span>INPUT CONSOLE</span><h2>Tap the key.<br>Hold for a dash.</h2><p>Short press = dot · long press = dash. Pause to commit a letter.</p></div><button id="telegraphKey" class="telegraph-key" aria-label="Morse telegraph key"><span class="knob"></span><span class="lever"></span><span class="base"></span></button><div class="signal-meter"><span>PRESS DURATION</span><div><i id="durationFill"></i></div><small>DOT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DASH</small></div></div>
@@ -30,6 +31,6 @@
       <section class="reference hidden" id="reference"><div><p class="eyebrow">QUICK CODEBOOK</p><h2>International Morse.</h2></div><div id="codeGrid" class="code-grid"></div></section>
       <footer><span>DESIGNED FOR CLEAR SIGNALS</span><span>SPACEBAR ENABLED · AUDIO SYNTHESIS ON</span></footer>
     </main>
-    <div class="toast" id="toast"></div><script src="script.js"></script>
+    <div class="toast" id="toast"></div><script src="src/compiler/lexer.js"></script><script src="script.js"></script>
   </body>
 </html>
