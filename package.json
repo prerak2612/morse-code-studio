@@ -1,9 +1,16 @@
 {
   "name": "pulsefield-morse-studio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Browser-native Morse code workstation",
+  "description": "Browser-native Morse code compiler and workstation",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "test": "node --test tests/*.test.js"
+    "start": "node scripts/serve.js",
+    "test": "node --test tests/*.test.js",
+    "test:watch": "node --test --watch tests/*.test.js",
+    "test:coverage": "node --test --experimental-test-coverage tests/*.test.js"
   }
 }
