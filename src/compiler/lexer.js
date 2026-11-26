@@ -82,7 +82,7 @@
     // Advance position bookkeeping over `ch`. Handles \n, \r and \r\n as one line break.
     const advance = (ch) => {
       i += ch.length;
-      if (ch === '\n' || ch === ' ' || ch === ' ') { line++; column = 1; }
+      if (ch === '\n' || ch === '' || ch === '') { line++; column = 1; }
       else if (ch === '\r') {
         if (input[i] === '\n') i++; // CRLF counts once
         line++; column = 1;
