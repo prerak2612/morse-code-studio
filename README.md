@@ -27,6 +27,8 @@ Then open `http://localhost:8080`.
 - `style.css` — responsive visual system and micro-interactions
 - `script.js` — Morse engine, audio synthesizer, telegraph key and UI controls
 - `src/compiler/lexer.js` — position-aware lexer (see `docs/LEXICAL_ANALYSIS.md`)
+- `src/compiler/symbol-table.js` — shared Morse symbol table
+- `src/compiler/semantic-analyzer.js` and `src/compiler/ir-generator.js` — semantic checks and Morse IR (see `docs/SEMANTIC_AND_IR.md`)
 - `tests/` — Node test suite, run with `npm test`
 
 ## Interaction notes
