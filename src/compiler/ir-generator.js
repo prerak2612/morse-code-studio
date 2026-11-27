@@ -27,16 +27,43 @@
 
   const instruction = (op, symbol) => (symbol === undefined ? { op, units: UNITS[op] } : { op, units: UNITS[op], symbol });
 
+  const isGap = (i) => i.op === Op.ELEMENT_GAP || i.op === Op.LETTER_GAP || i.op === Op.WORD_GAP;
+
+  /**
+   * Optimization pass for redundant gaps. Returns a new list:
+   * - a run of adjacent gaps becomes the single widest gap in it
+   *   (ELEMENT_GAP + LETTER_GAP → LETTER_GAP, LETTER_GAP + WORD_GAP → WORD_GAP);
+   * - gaps at the start or end are dropped, since they separate nothing.
+   */
+  function optimize(ir) {
+    const out = [];
+    for (const current of ir) {
+      const last = out[out.length - 1];
+      if (isGap(current)) {
+        if (!last) continue;
+        if (isGap(last)) {
+          if (current.units > last.units) out[out.length - 1] = current;
+          continue;
+        }
+      }
+      out.push(current);
+    }
+    if (out.length && isGap(out[out.length - 1])) out.pop();
+    return out;
+  }
+
   /**
    * Generate IR for `ast`. Run the semantic analyzer first: an unknown
    * symbol here is a programming error and throws.
    *
-   * Every element, letter and word is followed by its gap. The output is
-   * deterministic: the same AST always gives the same IR.
+   * Lowering follows every element, letter and word with its gap, then the
+   * optimization pass removes the redundant ones (pass `{ optimize: false }`
+   * to see the raw lowering). The output is deterministic: the same AST
+   * always gives the same IR.
    *
    * @returns {Array<{op:string, units:number, symbol?:string}>}
    */
-  function generateIR(ast) {
+  function generateIR(ast, { optimize: shouldOptimize = true } = {}) {
     if (!ast || ast.type !== 'Message' || !Array.isArray(ast.words)) {
       throw new TypeError('generateIR(ast) expects a Message node');
     }
@@ -54,8 +81,8 @@
       }
       ir.push(instruction(Op.WORD_GAP));
     }
-    return ir;
+    return shouldOptimize ? optimize(ir) : ir;
   }
 
-  return { Op, UNITS, generateIR };
+  return { Op, UNITS, generateIR, optimize };
 });

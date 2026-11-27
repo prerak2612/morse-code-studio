@@ -1,14 +1,15 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { generateIR, Op, UNITS } = require('../src/compiler/ir-generator.js');
+const { generateIR, optimize, Op, UNITS } = require('../src/compiler/ir-generator.js');
 const { astFrom } = require('./helpers/ast.js');
 
 const ops = (ir) => ir.map((i) => i.op);
 const marks = (ir) => ir.filter((i) => i.op === Op.DIT || i.op === Op.DAH);
+const totalUnits = (ir) => ir.reduce((sum, i) => sum + i.units, 0);
 
-test('lowering follows every element, letter and word with its gap', () => {
-  assert.deepEqual(generateIR(astFrom('ET')), [
+test('raw lowering follows every element, letter and word with its gap', () => {
+  assert.deepEqual(generateIR(astFrom('ET'), { optimize: false }), [
     { op: Op.DIT, units: 1, symbol: 'E' },
     { op: Op.ELEMENT_GAP, units: 1 },
     { op: Op.LETTER_GAP, units: 3 },
@@ -17,6 +18,37 @@ test('lowering follows every element, letter and word with its gap', () => {
     { op: Op.LETTER_GAP, units: 3 },
     { op: Op.WORD_GAP, units: 7 },
   ]);
+});
+
+test('optimized IR keeps only the gaps between marks', () => {
+  assert.deepEqual(generateIR(astFrom('ET')), [
+    { op: Op.DIT, units: 1, symbol: 'E' },
+    { op: Op.LETTER_GAP, units: 3 },
+    { op: Op.DAH, units: 3, symbol: 'T' },
+  ]);
+  assert.deepEqual(ops(generateIR(astFrom('A E'))), [Op.DIT, Op.ELEMENT_GAP, Op.DAH, Op.WORD_GAP, Op.DIT]);
+});
+
+test('PARIS is 43 units, the standard 50 minus the trailing word gap', () => {
+  assert.equal(totalUnits(generateIR(astFrom('PARIS'))), 43);
+  // Raw lowering adds 5 element gaps before letter gaps (5), a trailing letter gap (3) and word gap (7).
+  assert.equal(totalUnits(generateIR(astFrom('PARIS'), { optimize: false })), 43 + 5 + 3 + 7);
+});
+
+test('optimize collapses adjacent gaps to the widest one and trims the edges', () => {
+  const dit = { op: Op.DIT, units: 1, symbol: 'E' };
+  const gap = (op) => ({ op, units: UNITS[op] });
+  const input = [gap(Op.WORD_GAP), dit, gap(Op.ELEMENT_GAP), gap(Op.WORD_GAP), gap(Op.LETTER_GAP), dit, gap(Op.LETTER_GAP)];
+  const before = JSON.stringify(input);
+  assert.deepEqual(optimize(input), [dit, gap(Op.WORD_GAP), dit]);
+  assert.equal(JSON.stringify(input), before, 'input is not mutated');
+});
+
+test('optimize is idempotent and handles empty words in the AST', () => {
+  const ast = { type: 'Message', words: [...astFrom('E').words, { type: 'Word', characters: [] }, ...astFrom('E').words] };
+  const ir = generateIR(ast);
+  assert.deepEqual(ops(ir), [Op.DIT, Op.WORD_GAP, Op.DIT]);
+  assert.deepEqual(optimize(ir), ir);
 });
 
 test('marks follow the symbol table codes in order', () => {
