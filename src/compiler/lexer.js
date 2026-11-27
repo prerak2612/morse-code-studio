@@ -9,10 +9,9 @@
  * (exposes `window.MorseLexer`). See docs/LEXICAL_ANALYSIS.md.
  */
 (function (root, factory) {
-  const api = factory();
-  if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.MorseLexer = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./symbol-table.js'));
+  else root.MorseLexer = factory(root.MorseSymbolTable);
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (symbolTable) {
   'use strict';
 
   const TokenType = Object.freeze({
@@ -24,17 +23,8 @@
     EOF: 'EOF',
   });
 
-  /** International Morse table for every character the lexer accepts. */
-  const MORSE = Object.freeze({
-    A: '.-', B: '-...', C: '-.-.', D: '-..', E: '.', F: '..-.', G: '--.', H: '....', I: '..',
-    J: '.---', K: '-.-', L: '.-..', M: '--', N: '-.', O: '---', P: '.--.', Q: '--.-', R: '.-.',
-    S: '...', T: '-', U: '..-', V: '...-', W: '.--', X: '-..-', Y: '-.--', Z: '--..',
-    0: '-----', 1: '.----', 2: '..---', 3: '...--', 4: '....-',
-    5: '.....', 6: '-....', 7: '--...', 8: '---..', 9: '----.',
-    '?': '..--..', '!': '-.-.--', ',': '--..--', '.': '.-.-.-', "'": '.----.', '/': '-..-.',
-    '(': '-.--.', ')': '-.--.-', ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.',
-    '-': '-....-', '_': '..--.-', '"': '.-..-.', '$': '...-..-', '@': '.--.-.',
-  });
+  /** International Morse table for every character the lexer accepts (see symbol-table.js). */
+  const { MORSE } = symbolTable;
 
   const isAsciiLetter = (c) => (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
   const isDigit = (c) => c >= '0' && c <= '9';
