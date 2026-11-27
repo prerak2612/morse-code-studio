@@ -1,4 +1,4 @@
-const MORSE={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..',0:'-----',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.','?':'..--..','!':'-.-.--',',':'--..--','.':'.-.-.-',"'":'.----.','/':'-..-.','(':'-.--.',')':'-.--.-',':':'---...', ';':'-.-.-.','=':'-...-','+':'.-.-.','-':'-....-','_':'..--.-','"':'.-..-.','$':'...-..-','@':'.--.-.'};
+const MORSE=MorseSymbolTable.MORSE;
 const REVERSE=Object.fromEntries(Object.entries(MORSE).map(([k,v])=>[v,k]));
 const $=s=>document.querySelector(s);const message=$('#message'),morseOutput=$('#morseOutput'),bulb=$('#bulb'),wave=$('#waveform');let timer,playing=false,audioCtx,pressStart,pressTimer,letterTimer,wordTimer,current='',decoded='';
 for(let i=0;i<65;i++){const b=document.createElement('i');b.style.animationDelay=`${i*-0.08}s`;wave.append(b)}
