@@ -63,18 +63,20 @@
    *
    * @returns {Array<{op:string, units:number, symbol?:string}>}
    */
-  function generateIR(ast, { optimize: shouldOptimize = true } = {}) {
+  function generateIR(ast, { optimize: shouldOptimize = true, includeSource = false } = {}) {
     if (!ast || ast.type !== 'Message' || !Array.isArray(ast.words)) {
       throw new TypeError('generateIR(ast) expects a Message node');
     }
 
     const ir = [];
-    for (const word of ast.words) {
+    for (const [wordIndex, word] of ast.words.entries()) {
       for (const character of word.characters) {
         const code = symbolTable.lookup(character.value);
         if (code === null) throw new Error(`No Morse code for ${JSON.stringify(character.value)}; run semantic analysis first`);
         for (const element of code) {
-          ir.push(instruction(element === '.' ? Op.DIT : Op.DAH, character.value));
+          const mark = instruction(element === '.' ? Op.DIT : Op.DAH, character.value);
+          if (includeSource) Object.assign(mark, { source: character.span, word: wordIndex });
+          ir.push(mark);
           ir.push(instruction(Op.ELEMENT_GAP));
         }
         ir.push(instruction(Op.LETTER_GAP));
